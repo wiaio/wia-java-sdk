@@ -1,4 +1,4 @@
-# Wia Java SDK
+# Wia Java SDK [![Build Status](https://travis-ci.org/wiaio/wia-java-sdk.svg?branch=master)](https://travis-ci.org/wiaio/wia-java-sdk)
 
 You can sign up for a Wia account at https://wia.io.
 
