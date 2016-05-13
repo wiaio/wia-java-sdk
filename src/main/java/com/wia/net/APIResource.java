@@ -25,7 +25,7 @@ public abstract class APIResource extends WiaObject {
     }
 
     public static final Gson GSON = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+//            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapter(WiaRawJsonObject.class, new WiaRawJsonObjectDeserializer())
             .create();
 

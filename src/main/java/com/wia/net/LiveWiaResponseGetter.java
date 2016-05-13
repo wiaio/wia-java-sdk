@@ -320,7 +320,6 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
         String rBody = new Scanner(responseStream, APIResource.CHARSET)
                 .useDelimiter("\\A")
                 .next(); //
-
         responseStream.close();
         return rBody;
     }
@@ -400,7 +399,7 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
         String apiKey = options.getApiKey();
         if (apiKey == null || apiKey.trim().isEmpty()) {
             throw new AuthenticationException(
-                    "No API key provided. (HINT: set your API key using 'Wika.apiKey = <API-KEY>'. "
+                    "No API key provided. (HINT: set your API key using 'Wik.apiKey = <API-KEY>'. "
                             + "You can generate API keys from the Wia web interface. "
                             + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
                     null, 0);

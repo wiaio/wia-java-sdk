@@ -1,5 +1,6 @@
 package com.wia.model;
 
+import com.google.gson.annotations.SerializedName;
 import com.wia.exception.APIConnectionException;
 import com.wia.exception.APIException;
 import com.wia.exception.AuthenticationException;
@@ -9,12 +10,11 @@ import com.wia.net.RequestOptions;
 
 import java.util.Map;
 
-public class Device extends APIResource implements MetadataStore<Device>, HasId {
+public class Device extends APIResource implements HasId {
     String id;
     String name;
     Long createdAt;
     Long updatedAt;
-    Map<String, String> metadata;
 
     public String getId() {
         return id;
@@ -46,10 +46,6 @@ public class Device extends APIResource implements MetadataStore<Device>, HasId 
 
     public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Map<String, String> getMetadata() {
-        return metadata;
     }
 
     public static Device create(Map<String, Object> params)

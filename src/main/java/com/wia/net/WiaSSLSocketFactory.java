@@ -18,15 +18,15 @@ import java.util.Set;
  */
 public class WiaSSLSocketFactory extends SSLSocketFactory {
     private final SSLSocketFactory under;
-    private final boolean tlsv11Supported, tlsv12Supported;
+    private final boolean tlsv11Supported, tlsv12Supported, sslv3Supported;
 
-    private static final String TLSv11Proto = "TLSv1.1", TLSv12Proto = "TLSv1.2";
+    private static final String TLSv11Proto = "TLSv1.1", TLSv12Proto = "TLSv1.2", SSLv3Proto = "SSLv3";
 
     public WiaSSLSocketFactory() {
         this.under = HttpsURLConnection.getDefaultSSLSocketFactory();
 
         // For sufficiently old Java, TLSv1.1 and TLSv1.2 might not be supported, so do some detection
-        boolean tlsv11Supported = false, tlsv12Supported = false;
+        boolean tlsv11Supported = false, tlsv12Supported = false, sslv3Supported = false;
 
         String[] supportedProtos = new String[0];
         try {
@@ -39,11 +39,14 @@ public class WiaSSLSocketFactory extends SSLSocketFactory {
                 tlsv11Supported = true;
             } else if (proto.equals(TLSv12Proto)) {
                 tlsv12Supported = true;
+            } else if (proto.equals(SSLv3Proto)) {
+                sslv3Supported = true;
             }
         }
 
         this.tlsv11Supported = tlsv11Supported;
         this.tlsv12Supported = tlsv12Supported;
+        this.sslv3Supported = sslv3Supported;
     }
 
     private Socket fixupSocket(Socket sock) {
@@ -60,11 +63,20 @@ public class WiaSSLSocketFactory extends SSLSocketFactory {
         if (tlsv12Supported) {
             protos.add(TLSv12Proto);
         }
+        if (sslv3Supported) {
+            protos.add(SSLv3Proto);
+        }
 
+        for (String s : protos) {
+            System.out.println(s);
+        }
         sslSock.setEnabledProtocols(protos.toArray(new String[0]));
+        System.out.println(Arrays.toString(sslSock.getEnabledCipherSuites()));
+        System.out.println(Arrays.toString(sslSock.getSupportedCipherSuites()));
+
         return sslSock;
     }
-
+//DHE-RSA-AES256-SHA
     @Override
     public String[] getDefaultCipherSuites() {
         return this.under.getDefaultCipherSuites();
