@@ -1,12 +1,11 @@
-package com.wia.model;
+package io.wia.model;
 
-import com.google.gson.annotations.SerializedName;
-import com.wia.exception.APIConnectionException;
-import com.wia.exception.APIException;
-import com.wia.exception.AuthenticationException;
-import com.wia.exception.InvalidRequestException;
-import com.wia.net.APIResource;
-import com.wia.net.RequestOptions;
+import io.wia.exception.APIConnectionException;
+import io.wia.exception.APIException;
+import io.wia.exception.AuthenticationException;
+import io.wia.exception.InvalidRequestException;
+import io.wia.net.APIResource;
+import io.wia.net.RequestOptions;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.wia.model;
+package io.wia.model;
 
 import com.google.gson.JsonObject;
 

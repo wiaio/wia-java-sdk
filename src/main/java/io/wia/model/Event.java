@@ -1,4 +1,4 @@
-package com.wia.model;
+package io.wia.model;
 
 public class Event {
     String id;

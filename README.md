@@ -16,7 +16,7 @@ Add this dependency to your project's POM:
 
 ```xml
 <dependency>
-  <groupId>com.wia</groupId>
+  <groupId>io.wia</groupId>
   <artifactId>wia-java</artifactId>
   <version>0.1.0</version>
 </dependency>

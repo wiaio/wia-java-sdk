@@ -1,4 +1,4 @@
-package com.wia.model;
+package io.wia.model;
 
 public interface HasId {
     public String getId();

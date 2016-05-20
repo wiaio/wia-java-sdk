@@ -1,4 +1,4 @@
-package com.wia.model;
+package io.wia.model;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

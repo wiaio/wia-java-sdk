@@ -1,17 +1,16 @@
-package com.wia.net;
+package io.wia.net;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wia.Wia;
-import com.wia.exception.APIConnectionException;
-import com.wia.exception.APIException;
-import com.wia.exception.AuthenticationException;
-import com.wia.exception.InvalidRequestException;
-import com.wia.model.WiaCollectionInterface;
-import com.wia.model.WiaObject;
-import com.wia.model.WiaRawJsonObject;
-import com.wia.model.WiaRawJsonObjectDeserializer;
+import io.wia.Wia;
+import io.wia.exception.APIConnectionException;
+import io.wia.exception.APIException;
+import io.wia.exception.AuthenticationException;
+import io.wia.exception.InvalidRequestException;
+import io.wia.model.WiaCollectionInterface;
+import io.wia.model.WiaObject;
+import io.wia.model.WiaRawJsonObject;
+import io.wia.model.WiaRawJsonObjectDeserializer;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -49,6 +48,10 @@ public abstract class APIResource extends WiaObject {
 
     protected static String classURL(Class<?> clazz, String apiBase) {
         return String.format("%ss", singleClassURL(clazz, apiBase));
+    }
+
+    protected static String stringURL(String appendStr) {
+        return String.format("%s/v1/%s", Wia.getRestApiBase(), appendStr);
     }
 
     protected static String instanceURL(Class<?> clazz, String id)

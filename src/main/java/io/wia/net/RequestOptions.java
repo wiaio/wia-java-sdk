@@ -1,6 +1,6 @@
-package com.wia.net;
+package io.wia.net;
 
-import com.wia.Wia;
+import io.wia.Wia;
 
 public class RequestOptions {
     public static RequestOptions getDefault() {

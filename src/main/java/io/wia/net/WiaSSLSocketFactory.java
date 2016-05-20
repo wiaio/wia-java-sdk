@@ -1,4 +1,4 @@
-package com.wia.net;
+package io.wia.net;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -71,8 +71,6 @@ public class WiaSSLSocketFactory extends SSLSocketFactory {
             System.out.println(s);
         }
         sslSock.setEnabledProtocols(protos.toArray(new String[0]));
-        System.out.println(Arrays.toString(sslSock.getEnabledCipherSuites()));
-        System.out.println(Arrays.toString(sslSock.getSupportedCipherSuites()));
 
         return sslSock;
     }

@@ -1,4 +1,4 @@
-package com.wia.exception;
+package io.wia.exception;
 
 public class APIException extends WiaException {
 

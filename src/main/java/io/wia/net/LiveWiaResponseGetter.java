@@ -1,12 +1,12 @@
-package com.wia.net;
+package io.wia.net;
 
-import com.wia.Wia;
-import com.wia.exception.APIConnectionException;
-import com.wia.exception.APIException;
-import com.wia.exception.AuthenticationException;
-import com.wia.exception.RateLimitException;
-import com.wia.exception.InvalidRequestException;
-import com.wia.model.WiaCollectionInterface;
+import io.wia.Wia;
+import io.wia.exception.APIConnectionException;
+import io.wia.exception.APIException;
+import io.wia.exception.AuthenticationException;
+import io.wia.exception.RateLimitException;
+import io.wia.exception.InvalidRequestException;
+import io.wia.model.AccessToken;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
@@ -26,7 +26,6 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
     private static final SSLSocketFactory socketFactory = new WiaSSLSocketFactory();
 
     public <T> T request(
-            com.wia.net.APIResource.RequestMethod method,
+            APIResource.RequestMethod method,
             String url,
             Map<String, Object> params,
             Class<T> clazz,
@@ -396,15 +395,15 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             allowedToSetTTL = false;
         }
 
-        String apiKey = options.getApiKey();
-        if (apiKey == null || apiKey.trim().isEmpty()) {
-            throw new AuthenticationException(
-                    "No API key provided. (HINT: set your API key using 'Wik.apiKey = <API-KEY>'. "
-                            + "You can generate API keys from the Wia web interface. "
-                            + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
-                    null, 0);
-        }
-
+//        String apiKey = options.getApiKey();
+//        if ((apiKey == null || apiKey.trim().isEmpty()) && !type.equals(AccessToken.class)) {
+//            throw new AuthenticationException(
+//                    "No API key provided. (HINT: set your API key using 'Wia.apiKey = <API-KEY>'. "
+//                            + "You can generate API keys from the Wia web interface. "
+//                            + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
+//                    null, 0);
+//        }
+        System.out.println(url);
         try {
             WiaResponse response;
             switch (type) {

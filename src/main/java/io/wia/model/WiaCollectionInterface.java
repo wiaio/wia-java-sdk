@@ -1,6 +1,6 @@
-package com.wia.model;
+package io.wia.model;
 
-import com.wia.net.RequestOptions;
+import io.wia.net.RequestOptions;
 
 import java.util.List;
 import java.util.Map;

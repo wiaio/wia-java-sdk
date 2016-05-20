@@ -1,11 +1,10 @@
-package com.wia.net;
+package io.wia.net;
 
-import com.wia.exception.APIConnectionException;
-import com.wia.exception.APIException;
-import com.wia.exception.AuthenticationException;
-import com.wia.exception.InvalidRequestException;
+import io.wia.exception.APIConnectionException;
+import io.wia.exception.APIException;
+import io.wia.exception.AuthenticationException;
+import io.wia.exception.InvalidRequestException;
 import java.util.Map;
-import com.wia.net.APIResource;
 
 public interface WiaResponseGetter {
     public <T> T request(

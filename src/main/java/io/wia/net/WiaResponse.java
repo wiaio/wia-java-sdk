@@ -1,4 +1,4 @@
-package com.wia.net;
+package io.wia.net;
 
 import java.util.List;
 import java.util.Map;
