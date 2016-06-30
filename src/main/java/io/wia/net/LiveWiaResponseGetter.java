@@ -395,15 +395,15 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             allowedToSetTTL = false;
         }
 
-//        String apiKey = options.getApiKey();
-//        if ((apiKey == null || apiKey.trim().isEmpty()) && !type.equals(AccessToken.class)) {
-//            throw new AuthenticationException(
-//                    "No API key provided. (HINT: set your API key using 'Wia.apiKey = <API-KEY>'. "
-//                            + "You can generate API keys from the Wia web interface. "
-//                            + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
-//                    null, 0);
-//        }
-        System.out.println(url);
+        String apiKey = options.getApiKey();
+        if ((apiKey == null || apiKey.trim().isEmpty()) && !type.equals(AccessToken.class)) {
+            throw new AuthenticationException(
+                    "No API key provided. (HINT: set your API key using 'Wia.apiKey = <API-KEY>'. "
+                            + "You can generate API keys from the Wia web interface. "
+                            + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
+                    null, 0);
+        }
+
         try {
             WiaResponse response;
             switch (type) {

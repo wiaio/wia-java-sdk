@@ -23,21 +23,12 @@ import static org.junit.Assert.fail;
 
 public class WiaTest {
 
-    static String getUserAccessToken() {
-        return "u_pkSfUMnQEoX7YBgCZWfI0YaVjsthabJ3";
+    static String getSecretKey() {
+        return System.getProperty("testusersecretkey");
     }
 
     static String getRestApiBase() {
-        return "http://localhost:8081";
-    }
-
-    static Map<String, Object> getAccessTokenParams() {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username", "yh9frZAlX0ApiosL@y6FyH1KNnq7Epkfd.com");
-        params.put("password", "password");
-        params.put("scope", "user");
-        params.put("grantType", "password");
-        return params;
+        return "https://api.wia.io";
     }
 
     static Map<String, Object> getCreateDeviceParams() {
@@ -46,13 +37,6 @@ public class WiaTest {
         return params;
     }
 
-//
-//    @Test
-//    public void testGenerateAccessTokenForUser() throws WiaException {
-//        AccessToken accessToken = AccessToken.generate(getAccessTokenParams());
-//        assertNotNull(accessToken);
-//    }
-
     @Test
     public void initTests() {
         WiaClient.getInstance().overrideRestApiBase(getRestApiBase());
@@ -60,17 +44,31 @@ public class WiaTest {
 
     @Test
     public void testCreateDevice() throws WiaException {
-        WiaClient.getInstance().setSecretKey(getUserAccessToken());
+        System.out.println("Running test testCreateDevice");
+        WiaClient.getInstance().setSecretKey(getSecretKey());
         Device device = WiaClient.getInstance().createDevice(getCreateDeviceParams());
         assertNotNull(device);
     }
 
     @Test
     public void testRetrieveDevice() throws WiaException {
-        WiaClient.getInstance().setSecretKey(getUserAccessToken());
+        WiaClient.getInstance().setSecretKey(getSecretKey());
         Device createdDevice = WiaClient.getInstance().createDevice(getCreateDeviceParams());
         assertNotNull(createdDevice);
         Device retrievedDevice = WiaClient.getInstance().retrieveDevice(createdDevice.getId());
         assertNotNull(retrievedDevice);
+    }
+
+    @Test
+    public void listDevices() throws WiaException {
+        WiaClient.getInstance().setSecretKey(getSecretKey());
+        DeviceCollection devicesCollection = WiaClient.getInstance().listDevices(null);
+        System.out.println("Device count: " + devicesCollection.getCount());
+        if (devicesCollection.getDevices() != null) {
+            for (Device d : devicesCollection.getDevices()) {
+                System.out.println(d.getId());
+            }
+        }
+        assertNotNull(devicesCollection);
     }
 }

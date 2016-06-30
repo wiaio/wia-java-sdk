@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface WiaCollectionInterface<T> {
-    public List<T> getData();
-    public Boolean getHasMore();
-    public Integer getTotalCount();
-    public String getURL();
+    public Integer getCount();
 
     /**
      * Get request options that were used to fetch the collection. This is

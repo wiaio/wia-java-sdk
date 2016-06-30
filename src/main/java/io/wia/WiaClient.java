@@ -46,4 +46,9 @@ public class WiaClient {
         RequestOptions requestOptions = (new RequestOptions.RequestOptionsBuilder()).setApiKey(this.secretKey).build();
         return Device.retrieve(deviceId, requestOptions);
     }
+
+    public DeviceCollection listDevices(Map<String, Object> params) throws WiaException {
+        RequestOptions requestOptions = (new RequestOptions.RequestOptionsBuilder()).setApiKey(this.secretKey).build();
+        return Device.list(params, requestOptions);
+    }
 }
