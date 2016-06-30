@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 public class WiaTest {
 
     static String getSecretKey() {
-        return System.getProperty("testusersecretkey");
+        return System.getProperty("testusersecretkey") != null ? System.getProperty("testusersecretkey") : System.getenv("WIA_TEST_USER_SECRET_KEY");
     }
 
     static String getRestApiBase() {
