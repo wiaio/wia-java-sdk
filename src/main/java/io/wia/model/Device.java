@@ -1,5 +1,6 @@
 package io.wia.model;
 
+import io.wia.WiaClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
@@ -90,7 +91,7 @@ public class Device extends APIResource implements HasId {
     }
 
     public static DeviceCollection list(Map<String, Object> params,
-                                          RequestOptions options) throws  AuthenticationException, InvalidRequestException,
+                                        RequestOptions options) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return requestCollection(classURL(Device.class), params, DeviceCollection.class, options);
     }

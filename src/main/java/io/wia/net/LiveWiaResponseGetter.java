@@ -76,7 +76,7 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
         headers.put("User-Agent",
                 String.format("Wia/v1 JavaBindings/%s", Wia.VERSION));
 
-        headers.put("Authorization", String.format("Bearer %s", options.getApiKey()));
+        headers.put("Authorization", String.format("Bearer %s", options.getSecretKey()));
 
         // debug headers
         String[] propertyNames = { "os.name", "os.version", "os.arch",
@@ -395,10 +395,10 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             allowedToSetTTL = false;
         }
 
-        String apiKey = options.getApiKey();
+        String apiKey = options.getSecretKey();
         if ((apiKey == null || apiKey.trim().isEmpty()) && !type.equals(AccessToken.class)) {
             throw new AuthenticationException(
-                    "No API key provided. (HINT: set your API key using 'Wia.apiKey = <API-KEY>'. "
+                    "No Secret key provided. (HINT: set your Secret key using 'Wia.secretKey = <SECRET-KEY>'. "
                             + "You can generate API keys from the Wia web interface. "
                             + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
                     null, 0);

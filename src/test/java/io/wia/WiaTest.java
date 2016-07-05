@@ -45,24 +45,25 @@ public class WiaTest {
     @Test
     public void testCreateDevice() throws WiaException {
         System.out.println("Running test testCreateDevice");
-        WiaClient.getInstance().setSecretKey(getSecretKey());
-        Device device = WiaClient.getInstance().createDevice(getCreateDeviceParams());
+        Wia.secretKey = getSecretKey();
+        Device device = Device.create(getCreateDeviceParams());
         assertNotNull(device);
     }
 
     @Test
     public void testRetrieveDevice() throws WiaException {
-        WiaClient.getInstance().setSecretKey(getSecretKey());
-        Device createdDevice = WiaClient.getInstance().createDevice(getCreateDeviceParams());
+        Wia.secretKey = getSecretKey();
+        Device createdDevice = Device.create(getCreateDeviceParams());
         assertNotNull(createdDevice);
-        Device retrievedDevice = WiaClient.getInstance().retrieveDevice(createdDevice.getId());
+        Device retrievedDevice = Device.retrieve(createdDevice.getId());
         assertNotNull(retrievedDevice);
     }
 
     @Test
     public void listDevices() throws WiaException {
-        WiaClient.getInstance().setSecretKey(getSecretKey());
-        DeviceCollection devicesCollection = WiaClient.getInstance().listDevices(null);
+        Wia.secretKey = getSecretKey();
+
+        DeviceCollection devicesCollection = Device.list(null);
         System.out.println("Device count: " + devicesCollection.getCount());
         if (devicesCollection.getDevices() != null) {
             for (Device d : devicesCollection.getDevices()) {

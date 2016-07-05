@@ -66,7 +66,7 @@ public abstract class APIResource extends WiaObject {
         } catch (UnsupportedEncodingException e) {
             throw new InvalidRequestException("Unable to encode parameters to "
                     + CHARSET
-                    + ". Please contact support@stripe.com for assistance.",
+                    + ". Please contact support@wia.io for assistance.",
                     null, null, 0, e);
         }
     }

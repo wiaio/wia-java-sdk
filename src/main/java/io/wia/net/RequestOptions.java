@@ -4,20 +4,20 @@ import io.wia.Wia;
 
 public class RequestOptions {
     public static RequestOptions getDefault() {
-        return new RequestOptions(Wia.apiKey, Wia.apiVersion);
+        return new RequestOptions(Wia.secretKey, Wia.apiVersion);
     }
 
-    private final String apiKey;
+    private final String secretKey;
     private final String wiaVersion;
 
 
-    private RequestOptions(String apiKey, String wiaVersion) {
-        this.apiKey = apiKey;
+    private RequestOptions(String secretKey, String wiaVersion) {
+        this.secretKey = secretKey;
         this.wiaVersion = wiaVersion;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public String getSecretKey() {
+        return secretKey;
     }
 
     public String getWiaVersion() {
@@ -31,7 +31,7 @@ public class RequestOptions {
 
         RequestOptions that = (RequestOptions) o;
 
-        if (apiKey != null ? !apiKey.equals(that.apiKey) : that.apiKey != null) {
+        if (secretKey != null ? !secretKey.equals(that.secretKey) : that.secretKey != null) {
             return false;
         }
         if (wiaVersion != null ? !wiaVersion.equals(that.wiaVersion) : that.wiaVersion != null) {
@@ -43,7 +43,7 @@ public class RequestOptions {
 
     @Override
     public int hashCode() {
-        int result = apiKey != null ? apiKey.hashCode() : 0;
+        int result = secretKey != null ? secretKey.hashCode() : 0;
         result = 31 * result + (wiaVersion != null ? wiaVersion.hashCode() : 0);
         return result;
     }
@@ -53,29 +53,29 @@ public class RequestOptions {
     }
 
     public RequestOptionsBuilder toBuilder() {
-        return new RequestOptionsBuilder().setApiKey(this.apiKey).setWiaVersion(this.wiaVersion);
+        return new RequestOptionsBuilder().setSecretKey(this.secretKey).setWiaVersion(this.wiaVersion);
     }
 
     public static final class RequestOptionsBuilder {
-        private String apiKey;
+        private String secretKey;
         private String wiaVersion;
 
         public RequestOptionsBuilder() {
-            this.apiKey = Wia.apiKey;
+            this.secretKey = Wia.secretKey;
             this.wiaVersion = Wia.apiVersion;
         }
 
-        public String getApiKey() {
-            return apiKey;
+        public String getSecretKey() {
+            return secretKey;
         }
 
-        public RequestOptionsBuilder setApiKey(String apiKey) {
-            this.apiKey = normalizeApiKey(apiKey);
+        public RequestOptionsBuilder setSecretKey(String secretKey) {
+            this.secretKey = normalizeSecretKey(secretKey);
             return this;
         }
 
-        public RequestOptionsBuilder clearApiKey() {
-            this.apiKey = null;
+        public RequestOptionsBuilder clearSecretKey() {
+            this.secretKey = null;
             return this;
         }
 
@@ -91,19 +91,19 @@ public class RequestOptions {
 
         public RequestOptions build() {
             return new RequestOptions(
-                    normalizeApiKey(this.apiKey),
+                    normalizeSecretKey(this.secretKey),
                     normalizeWiaVersion(this.wiaVersion));
         }
     }
 
-    private static String normalizeApiKey(String apiKey) {
+    private static String normalizeSecretKey(String secretKey) {
         // null apiKeys are considered "valid"
-        if (apiKey == null) {
+        if (secretKey == null) {
             return null;
         }
-        String normalized = apiKey.trim();
+        String normalized = secretKey.trim();
         if (normalized.isEmpty()) {
-            throw new InvalidRequestOptionsException("Empty API key specified!");
+            throw new InvalidRequestOptionsException("Empty Secret Key specified!");
         }
         return normalized;
     }

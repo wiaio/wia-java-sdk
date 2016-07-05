@@ -6,7 +6,8 @@ import java.net.Proxy;
 public abstract class Wia {
     public static final String LIVE_REST_API_BASE = "https://api.wia.io";
     public static final String VERSION = "0.1.0";
-    public static volatile String apiKey;
+    public static volatile String secretKey;
+    public static volatile String publicKey;
     public static volatile String apiVersion;
 
     private static volatile String restApiBase = LIVE_REST_API_BASE;
