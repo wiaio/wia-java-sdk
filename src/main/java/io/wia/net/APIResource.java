@@ -74,7 +74,7 @@ public abstract class APIResource extends WiaObject {
     public static final String CHARSET = "UTF-8";
 
     public enum RequestMethod {
-        GET, POST, DELETE
+        GET, POST, DELETE, PUT
     }
 
     public enum RequestType {

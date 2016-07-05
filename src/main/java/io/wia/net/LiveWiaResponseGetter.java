@@ -1,5 +1,6 @@
 package io.wia.net;
 
+import com.google.gson.Gson;
 import io.wia.Wia;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
@@ -179,7 +180,28 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", String.format(
-                "application/x-www-form-urlencoded;charset=%s", APIResource.CHARSET));
+                "application/json;charset=%s", APIResource.CHARSET));
+
+        OutputStream output = null;
+        try {
+            output = conn.getOutputStream();
+            output.write(query.getBytes(APIResource.CHARSET));
+        } finally {
+            if (output != null) {
+                output.close();
+            }
+        }
+        return conn;
+    }
+
+    private static java.net.HttpURLConnection createPutConnection(
+            String url, String query, RequestOptions options) throws IOException {
+        java.net.HttpURLConnection conn = createWiaConnection(url, options);
+
+        conn.setDoOutput(true);
+        conn.setRequestMethod("PUT");
+        conn.setRequestProperty("Content-Type", String.format(
+                "application/json;charset=%s", APIResource.CHARSET));
 
         OutputStream output = null;
         try {
@@ -335,6 +357,9 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
                 case POST:
                     conn = createPostConnection(url, query, options);
                     break;
+                case PUT:
+                    conn = createPutConnection(url, query, options);
+                    break;
                 case DELETE:
                     conn = createDeleteConnection(url, query, options);
                     break;
@@ -457,15 +482,18 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             Map<String, Object> params, RequestOptions options)
             throws InvalidRequestException, APIConnectionException,
             APIException {
+        Gson gson = new Gson();
         String query;
-        try {
-            query = createQuery(params);
-        } catch (UnsupportedEncodingException e) {
-            throw new InvalidRequestException("Unable to encode parameters to "
-                    + APIResource.CHARSET
-                    + ". Please contact support@wia.io for assistance.",
-                    null, null, 0, e);
-        }
+        query = gson.toJson(params);
+
+//        try {
+//            query = createQuery(params);
+//        } catch (UnsupportedEncodingException e) {
+//            throw new InvalidRequestException("Unable to encode parameters to "
+//                    + APIResource.CHARSET
+//                    + ". Please contact support@wia.io for assistance.",
+//                    null, null, 0, e);
+//        }
 
         try {
             // HTTPSURLConnection verifies SSL cert by default
@@ -576,6 +604,7 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             throws InvalidRequestException, AuthenticationException, APIException {
         LiveWiaResponseGetter.Error error = APIResource.GSON.fromJson(rBody,
                 LiveWiaResponseGetter.ErrorContainer.class).error;
+        System.out.println("---------------rCode " + rCode);
         switch (rCode) {
             case 400:
                 throw new InvalidRequestException(error.message, error.param, requestId, rCode, null);

@@ -81,7 +81,7 @@ public class Device extends APIResource implements HasId {
     public Device update(Map<String, Object> params, RequestOptions options)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
-        return request(RequestMethod.POST, instanceURL(Device.class, this.id), params, Device.class, options);
+        return request(RequestMethod.PUT, instanceURL(Device.class, this.id), params, Device.class, options);
     }
 
     public static DeviceCollection list(Map<String, Object> params)

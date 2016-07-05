@@ -60,16 +60,42 @@ public class WiaTest {
     }
 
     @Test
-    public void listDevices() throws WiaException {
+    public void testUpdateDevice() throws WiaException {
+        Wia.secretKey = getSecretKey();
+
+        Map<String, Object> createParams = new HashMap<String, Object>();
+        createParams.put("name", "Old device name");
+
+        Device createdDevice = Device.create(createParams);
+        assertNotNull(createdDevice);
+
+        Device retrievedDevice = Device.retrieve(createdDevice.getId());
+        assertNotNull(retrievedDevice);
+
+        Map<String, Object> updateParams = new HashMap<String, Object>();
+        updateParams.put("name", "New device name");
+
+        retrievedDevice.update(updateParams);
+    }
+
+    @Test
+    public void testListDevices() throws WiaException {
         Wia.secretKey = getSecretKey();
 
         DeviceCollection devicesCollection = Device.list(null);
         System.out.println("Device count: " + devicesCollection.getCount());
-        if (devicesCollection.getDevices() != null) {
-            for (Device d : devicesCollection.getDevices()) {
-                System.out.println(d.getId());
-            }
-        }
+        assertNotNull(devicesCollection);
+    }
+
+    @Test
+    public void testListDevicesWithParams() throws WiaException {
+        Wia.secretKey = getSecretKey();
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("limit", 10);
+
+        DeviceCollection devicesCollection = Device.list(params);
+        System.out.println("Device count: " + devicesCollection.getCount());
         assertNotNull(devicesCollection);
     }
 }
