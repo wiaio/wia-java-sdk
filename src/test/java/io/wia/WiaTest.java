@@ -228,7 +228,7 @@ public class WiaTest {
     }
 
     @Test
-    public void getListLogs() throws WiaException {
+    public void testListLogs() throws WiaException {
         Wia.secretKey = getSecretKey();
 
         Map<String, Object> createParams = new HashMap<String, Object>();
@@ -244,5 +244,37 @@ public class WiaTest {
         assertNotNull(logCollection);
         assertNotNull(logCollection.getLogs());
         assertNotNull(logCollection.getCount());
+    }
+
+
+    @Test
+    public void testPublishSensor() throws WiaException {
+        Wia.secretKey = getDeviceSecretKey();
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", "temperature");
+        params.put("data", 21.453);
+
+        Sensor sensor = Sensor.publish(params);
+        assertNotNull(sensor);
+    }
+
+    @Test
+    public void testListSensors() throws WiaException {
+        Wia.secretKey = getSecretKey();
+
+        Map<String, Object> createParams = new HashMap<String, Object>();
+        createParams.put("name", "testListSensors");
+
+        Device createdDevice = Device.create(createParams);
+        assertNotNull(createdDevice);
+
+        Map<String, Object> listParams = new HashMap<String, Object>();
+        listParams.put("device", createdDevice.getId());
+
+        SensorCollection sensorCollection = Sensor.list(listParams);
+        assertNotNull(sensorCollection);
+        assertNotNull(sensorCollection.getSensors());
+        assertNotNull(sensorCollection.getCount());
     }
 }
