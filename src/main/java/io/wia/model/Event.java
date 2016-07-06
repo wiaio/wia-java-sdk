@@ -1,6 +1,15 @@
 package io.wia.model;
 
-public class Event {
+import io.wia.exception.APIConnectionException;
+import io.wia.exception.APIException;
+import io.wia.exception.AuthenticationException;
+import io.wia.exception.InvalidRequestException;
+import io.wia.net.APIResource;
+import io.wia.net.RequestOptions;
+
+import java.util.Map;
+
+public class Event extends APIResource implements HasId {
     String id;
     String name;
     Object data;
@@ -45,5 +54,19 @@ public class Event {
 
     public void setReceivedTimestamp(Long receivedTimestamp) {
         this.receivedTimestamp = receivedTimestamp;
+    }
+
+
+    public static Event publish(Map<String, Object> params)
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return publish(params, (RequestOptions) null);
+    }
+
+    public static Event publish(Map<String, Object> params, RequestOptions options)
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        // TODO: Check is stream is connect, if yes, send via stream instead
+        return request(APIResource.RequestMethod.POST, classURL(Event.class), params, Event.class, options);
     }
 }

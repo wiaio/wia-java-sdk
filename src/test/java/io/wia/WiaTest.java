@@ -32,6 +32,10 @@ public class WiaTest {
         return System.getProperty("testusersecretkey") != null ? System.getProperty("testusersecretkey") : System.getenv("WIA_TEST_USER_SECRET_KEY");
     }
 
+    static String getDeviceSecretKey() {
+        return System.getProperty("testdevicesecretkey") != null ? System.getProperty("testdevicesecretkey") : System.getenv("WIA_TEST_DEVICE_SECRET_KEY");
+    }
+
     static String getRestApiBase() {
         return "https://api.wia.io";
     }
@@ -118,4 +122,45 @@ public class WiaTest {
         System.out.println("Device count: " + devicesCollection.getCount());
         assertNotNull(devicesCollection);
     }
+
+    @Test
+    public void testPublishEvent() throws WiaException {
+        Wia.secretKey = getDeviceSecretKey();
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", "testEvent");
+
+        Event event = Event.publish(params);
+        assertNotNull(event);
+    }
+
+    @Test
+    public void testPublishEventWithData() throws WiaException {
+        Wia.secretKey = getDeviceSecretKey();
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", "testEventNumber");
+        params.put("data", 213.545);
+
+        Event event = Event.publish(params);
+        assertNotNull(event);
+    }
+
+    @Test
+    public void testPublishEventWithDataObject() throws WiaException {
+        Wia.secretKey = getDeviceSecretKey();
+
+        Map<String, Object> dataObj = new HashMap<String, Object>();
+        dataObj.put("x", 12.45);
+        dataObj.put("y", 456.74);
+        dataObj.put("z", 2.56);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", "testEventObj");
+        params.put("data", dataObj);
+
+        Event event = Event.publish(params);
+        assertNotNull(event);
+    }
+
 }

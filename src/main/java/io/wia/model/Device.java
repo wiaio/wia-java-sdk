@@ -54,16 +54,16 @@ public class Device extends APIResource implements HasId {
         return create(params, (RequestOptions) null);
     }
 
-    public static Device retrieve(String id)
-            throws AuthenticationException, InvalidRequestException,
-            APIConnectionException, APIException {
-        return retrieve(id, (RequestOptions) null);
-    }
-
     public static Device create(Map<String, Object> params, RequestOptions options)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return request(RequestMethod.POST, classURL(Device.class), params, Device.class, options);
+    }
+
+    public static Device retrieve(String id)
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return retrieve(id, (RequestOptions) null);
     }
 
     public static Device retrieve(String id, RequestOptions options)
@@ -84,18 +84,6 @@ public class Device extends APIResource implements HasId {
         return request(RequestMethod.PUT, instanceURL(Device.class, this.id), params, Device.class, options);
     }
 
-    public static DeviceCollection list(Map<String, Object> params)
-            throws  AuthenticationException, InvalidRequestException,
-            APIConnectionException, APIException {
-        return list(params, (RequestOptions) null);
-    }
-
-    public static DeviceCollection list(Map<String, Object> params,
-                                        RequestOptions options) throws AuthenticationException, InvalidRequestException,
-            APIConnectionException, APIException {
-        return requestCollection(classURL(Device.class), params, DeviceCollection.class, options);
-    }
-
     public WiaDeletedObject delete()
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
@@ -106,5 +94,17 @@ public class Device extends APIResource implements HasId {
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return request(RequestMethod.DELETE, instanceURL(Device.class, this.id), null, WiaDeletedObject.class, options);
+    }
+
+    public static DeviceCollection list(Map<String, Object> params)
+            throws  AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return list(params, (RequestOptions) null);
+    }
+
+    public static DeviceCollection list(Map<String, Object> params,
+                                        RequestOptions options) throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return requestCollection(classURL(Device.class), params, DeviceCollection.class, options);
     }
 }
