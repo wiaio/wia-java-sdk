@@ -214,4 +214,35 @@ public class WiaTest {
         assertNotNull(locationsCollection.getLocations());
         assertNotNull(locationsCollection.getCount());
     }
+
+    @Test
+    public void testPublishLog() throws WiaException {
+        Wia.secretKey = getDeviceSecretKey();
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("level", "info");
+        params.put("message", "This is a log message");
+
+        Log log = Log.publish(params);
+        assertNotNull(log);
+    }
+
+    @Test
+    public void getListLogs() throws WiaException {
+        Wia.secretKey = getSecretKey();
+
+        Map<String, Object> createParams = new HashMap<String, Object>();
+        createParams.put("name", "testListLogs");
+
+        Device createdDevice = Device.create(createParams);
+        assertNotNull(createdDevice);
+
+        Map<String, Object> listParams = new HashMap<String, Object>();
+        listParams.put("device", createdDevice.getId());
+
+        LogCollection logCollection = Log.list(listParams);
+        assertNotNull(logCollection);
+        assertNotNull(logCollection.getLogs());
+        assertNotNull(logCollection.getCount());
+    }
 }
