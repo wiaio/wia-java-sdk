@@ -37,7 +37,7 @@ public class WiaTest {
     }
 
     static String getRestApiBase() {
-        return "https://api.wia.io";
+        return System.getenv("WIA_TEST_REST_API") != null ? System.getenv("WIA_TEST_REST_API") : "https://api.wia.io";
     }
 
     static Map<String, Object> getCreateDeviceParams() {
@@ -163,4 +163,24 @@ public class WiaTest {
         assertNotNull(event);
     }
 
+    @Test
+    public void testListEvents() throws WiaException {
+        Wia.secretKey = getSecretKey();
+
+        Map<String, Object> createParams = new HashMap<String, Object>();
+        createParams.put("name", "Device name");
+
+        Device createdDevice = Device.create(createParams);
+        assertNotNull(createdDevice);
+
+        logger.debug("Getting events for device: " + createdDevice.getId());
+
+        Map<String, Object> listParams = new HashMap<String, Object>();
+        listParams.put("device", createdDevice.getId());
+
+        EventCollection eventsCollection = Event.list(listParams);
+        assertNotNull(eventsCollection);
+        assertNotNull(eventsCollection.getEvents());
+        assertNotNull(eventsCollection.getCount());
+    }
 }

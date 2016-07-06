@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import static io.wia.net.APIResource.RequestMethod.GET;
+
 public class LiveWiaResponseGetter implements WiaResponseGetter {
     private static final String DNS_CACHE_TTL_PROPERTY_NAME = "networkaddress.cache.ttl";
 
@@ -482,18 +484,21 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             Map<String, Object> params, RequestOptions options)
             throws InvalidRequestException, APIConnectionException,
             APIException {
-        Gson gson = new Gson();
         String query;
-        query = gson.toJson(params);
 
-//        try {
-//            query = createQuery(params);
-//        } catch (UnsupportedEncodingException e) {
-//            throw new InvalidRequestException("Unable to encode parameters to "
-//                    + APIResource.CHARSET
-//                    + ". Please contact support@wia.io for assistance.",
-//                    null, null, 0, e);
-//        }
+        if (method == GET) {
+            try {
+                query = createQuery(params);
+            } catch (UnsupportedEncodingException e) {
+                throw new InvalidRequestException("Unable to encode parameters to "
+                        + APIResource.CHARSET
+                        + ". Please contact support@wia.io for assistance.",
+                        null, null, 0, e);
+            }
+        } else {
+            Gson gson = new Gson();
+            query = gson.toJson(params);
+        }
 
         try {
             // HTTPSURLConnection verifies SSL cert by default
@@ -628,7 +633,7 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
         String unknownErrorMessage = "Sorry, an unknown error occurred while trying to use the "
                 + "Google App Engine runtime. Please contact support@wia.io for assistance.";
         try {
-            if (method == APIResource.RequestMethod.GET || method == APIResource.RequestMethod.DELETE) {
+            if (method == GET || method == APIResource.RequestMethod.DELETE) {
                 url = String.format("%s?%s", url, query);
             }
             URL fetchURL = new URL(url);

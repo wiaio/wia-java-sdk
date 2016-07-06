@@ -69,4 +69,16 @@ public class Event extends APIResource implements HasId {
         // TODO: Check is stream is connect, if yes, send via stream instead
         return request(APIResource.RequestMethod.POST, classURL(Event.class), params, Event.class, options);
     }
+
+    public static EventCollection list(Map<String, Object> params)
+            throws  AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return list(params, (RequestOptions) null);
+    }
+
+    public static EventCollection list(Map<String, Object> params,
+                                        RequestOptions options) throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return requestCollection(classURL(Event.class), params, EventCollection.class, options);
+    }
 }
