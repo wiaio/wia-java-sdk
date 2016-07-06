@@ -95,4 +95,16 @@ public class Device extends APIResource implements HasId {
             APIConnectionException, APIException {
         return requestCollection(classURL(Device.class), params, DeviceCollection.class, options);
     }
+
+    public WiaDeletedObject delete()
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return delete((RequestOptions) null);
+    }
+
+    public WiaDeletedObject delete(RequestOptions options)
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return request(RequestMethod.DELETE, instanceURL(Device.class, this.id), null, WiaDeletedObject.class, options);
+    }
 }

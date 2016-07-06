@@ -6,12 +6,16 @@ import io.wia.exception.*;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class WiaTest {
+    private static Logger logger = LogManager.getLogger(WiaTest.class);
 
     static String getSecretKey() {
         return System.getProperty("testusersecretkey") != null ? System.getProperty("testusersecretkey") : System.getenv("WIA_TEST_USER_SECRET_KEY");
@@ -39,12 +44,13 @@ public class WiaTest {
 
     @Test
     public void initTests() {
+        BasicConfigurator.configure();
+        logger.debug("Starting tests.");
         WiaClient.getInstance().overrideRestApiBase(getRestApiBase());
     }
 
     @Test
     public void testCreateDevice() throws WiaException {
-        System.out.println("Running test testCreateDevice");
         Wia.secretKey = getSecretKey();
         Device device = Device.create(getCreateDeviceParams());
         assertNotNull(device);
@@ -76,6 +82,20 @@ public class WiaTest {
         updateParams.put("name", "New device name");
 
         retrievedDevice.update(updateParams);
+    }
+
+    @Test
+    public void testDeleteDevice() throws WiaException {
+        Wia.secretKey = getSecretKey();
+
+        Map<String, Object> createParams = new HashMap<String, Object>();
+        createParams.put("name", "Device name");
+
+        Device createdDevice = Device.create(createParams);
+        assertNotNull(createdDevice);
+
+        WiaDeletedObject deletedDevice = createdDevice.delete();
+        assertEquals(createdDevice.getId(), deletedDevice.getId());
     }
 
     @Test
