@@ -8,6 +8,7 @@ import io.wia.exception.AuthenticationException;
 import io.wia.exception.InvalidRequestException;
 import io.wia.net.APIResource;
 import io.wia.net.RequestOptions;
+import io.wia.net.WiaEventSubscribeCallback;
 
 import java.util.Map;
 
@@ -87,5 +88,13 @@ public class Event extends APIResource implements HasId {
                                         RequestOptions options) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return requestCollection(classURL(Event.class), params, EventCollection.class, options);
+    }
+
+    public static void subscribe(String device, WiaEventSubscribeCallback callback) {
+        subscribe(device, "+", callback);
+    }
+
+    public static void subscribe(String device, String eventName, WiaEventSubscribeCallback callback) {
+        WiaStreamClient.getInstance().subscribe("devices/" + device + "/events/" + eventName, callback);
     }
 }

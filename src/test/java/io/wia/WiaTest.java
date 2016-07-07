@@ -326,4 +326,20 @@ public class WiaTest {
         Thread.sleep(250);
         assertFalse(Wia.isConnectedToStream());
     }
+
+//    @Test
+//    public void testUserSubscribe() throws WiaException, InterruptedException, MqttException {
+//        Wia.secretKey = getSecretKey();
+//
+//        Wia.connectToStream();
+//        Thread.sleep(250);
+//        assertTrue(Wia.isConnectedToStream());
+//        Event.subscribe("dev_H0a1wxJZrOVUd2nF", "myFirstEvent", new WiaEventSubscribeCallback() {
+//            @Override
+//            public void received(Event event) {
+//                logger.info("Received event!");
+//            }
+//        });
+//        Thread.sleep(5000);
+//    }
 }
