@@ -71,6 +71,7 @@ public class Event extends APIResource implements HasId {
             Gson gson = new Gson();
             String payload = gson.toJson(params);
             WiaStreamClient.getInstance().publish("devices/---/events/" + params.get("name"), payload);
+            return new Event();
         } else {
             return request(APIResource.RequestMethod.POST, classURL(Event.class), params, Event.class, options);
         }
