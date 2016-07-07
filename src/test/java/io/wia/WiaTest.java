@@ -7,6 +7,7 @@ import io.wia.exception.*;
 import junit.framework.Assert;
 
 import org.apache.log4j.BasicConfigurator;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -276,5 +277,25 @@ public class WiaTest {
         assertNotNull(sensorCollection);
         assertNotNull(sensorCollection.getSensors());
         assertNotNull(sensorCollection.getCount());
+    }
+
+    @Test
+    public void testConnectFromStream() throws WiaException, InterruptedException, MqttException {
+        Wia.connectToStream();
+        logger.info("Connected to stream!");
+        Thread.sleep(1500);
+        Wia.disconnectFromStream();
+        logger.info("Disconnected from stream!");
+        Thread.sleep(250);
+    }
+
+    @Test
+    public void testIsConnectedToStream() throws WiaException, InterruptedException, MqttException {
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+        Wia.disconnectFromStream();
+        Thread.sleep(250);
+        assertFalse(Wia.isConnectedToStream());
     }
 }
