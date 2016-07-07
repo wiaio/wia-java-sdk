@@ -13,6 +13,9 @@ public class WiaStreamClient {
     private static MemoryPersistence persistence = null;
     private static MqttClient mqttClient = null;
 
+    private final int MQTT_QOS = 0;
+    private final boolean MQTT_MESSAGE_RETAINED = false;
+
     protected WiaStreamClient() {
         persistence = new MemoryPersistence();
         try {
@@ -61,5 +64,15 @@ public class WiaStreamClient {
 
     public boolean isConnected() {
         return mqttClient.isConnected();
+    }
+
+    public void publish(String topic, String content) {
+        MqttMessage message = new MqttMessage(content.getBytes());
+        message.setQos(MQTT_QOS);
+        try {
+            mqttClient.publish(topic, content.getBytes(), MQTT_QOS, MQTT_MESSAGE_RETAINED);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 }

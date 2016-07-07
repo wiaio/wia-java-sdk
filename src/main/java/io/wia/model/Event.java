@@ -1,5 +1,7 @@
 package io.wia.model;
 
+import com.google.gson.Gson;
+import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
@@ -56,7 +58,6 @@ public class Event extends APIResource implements HasId {
         this.receivedTimestamp = receivedTimestamp;
     }
 
-
     public static Event publish(Map<String, Object> params)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
@@ -66,8 +67,13 @@ public class Event extends APIResource implements HasId {
     public static Event publish(Map<String, Object> params, RequestOptions options)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
-        // TODO: Check is stream is connect, if yes, send via stream instead
-        return request(APIResource.RequestMethod.POST, classURL(Event.class), params, Event.class, options);
+        if (WiaStreamClient.getInstance().isConnected()) {
+            Gson gson = new Gson();
+            String payload = gson.toJson(params);
+            WiaStreamClient.getInstance().publish("devices/---/events/" + params.get("name"), payload);
+        } else {
+            return request(APIResource.RequestMethod.POST, classURL(Event.class), params, Event.class, options);
+        }
     }
 
     public static EventCollection list(Map<String, Object> params)

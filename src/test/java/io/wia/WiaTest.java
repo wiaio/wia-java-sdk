@@ -280,7 +280,9 @@ public class WiaTest {
     }
 
     @Test
-    public void testConnectFromStream() throws WiaException, InterruptedException, MqttException {
+    public void testUserConnectToStream() throws WiaException, InterruptedException, MqttException {
+        Wia.secretKey = getSecretKey();
+
         Wia.connectToStream();
         logger.info("Connected to stream!");
         Thread.sleep(1500);
@@ -290,7 +292,33 @@ public class WiaTest {
     }
 
     @Test
-    public void testIsConnectedToStream() throws WiaException, InterruptedException, MqttException {
+    public void testUserIsConnectedToStream() throws WiaException, InterruptedException, MqttException {
+        Wia.secretKey = getSecretKey();
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+        Wia.disconnectFromStream();
+        Thread.sleep(250);
+        assertFalse(Wia.isConnectedToStream());
+    }
+
+    @Test
+    public void testDeviceConnectToStream() throws WiaException, InterruptedException, MqttException {
+        Wia.secretKey = getDeviceSecretKey();
+
+        Wia.connectToStream();
+        logger.info("Connected to stream!");
+        Thread.sleep(1500);
+        Wia.disconnectFromStream();
+        logger.info("Disconnected from stream!");
+        Thread.sleep(250);
+    }
+
+    @Test
+    public void testDeviceIsConnectedToStream() throws WiaException, InterruptedException, MqttException {
+        Wia.secretKey = getDeviceSecretKey();
+
         Wia.connectToStream();
         Thread.sleep(250);
         assertTrue(Wia.isConnectedToStream());
