@@ -9,10 +9,14 @@ import io.wia.exception.InvalidRequestException;
 import io.wia.net.APIResource;
 import io.wia.net.RequestOptions;
 import io.wia.net.WiaEventSubscribeCallback;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Map;
 
 public class Event extends APIResource implements HasId {
+    private static Logger logger = LogManager.getLogger(Event.class);
+
     String id;
     String name;
     Object data;
@@ -95,6 +99,16 @@ public class Event extends APIResource implements HasId {
     }
 
     public static void subscribe(String device, String eventName, WiaEventSubscribeCallback callback) {
+        logger.debug(callback);
         WiaStreamClient.getInstance().subscribe("devices/" + device + "/events/" + eventName, callback);
     }
+
+    public static void unsubscribe(String device) {
+        unsubscribe(device, "+");
+    }
+
+    public static void unsubscribe(String device, String eventName) {
+        WiaStreamClient.getInstance().unsubscribe("devices/" + device + "/events/" + eventName);
+    }
+
 }

@@ -1,5 +1,10 @@
 package io.wia;
 
+import com.google.gson.Gson;
+import io.wia.model.Event;
+import io.wia.model.Log;
+import io.wia.net.WiaEventSubscribeCallback;
+import io.wia.net.WiaLogSubscribeCallback;
 import io.wia.net.WiaSubscribeCallback;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -45,11 +50,12 @@ public class WiaStreamClient {
         connOpts.setCleanSession(true);
         connOpts.setUserName(Wia.secretKey);
         connOpts.setPassword(" ".toCharArray());
+        logger.debug("Using username: " + Wia.secretKey);
 
         mqttClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable throwable) {
-                logger.debug("connectionLost");
+                logger.debug("connectionLost: " + throwable.getCause().getMessage());
             }
 
             @Override
@@ -58,6 +64,17 @@ public class WiaStreamClient {
                 // Check for specific topic
                 if (subscribeCallbacks.containsKey(s)) {
                     logger.debug("Got specific callback!");
+
+                    WiaSubscribeCallback callback = subscribeCallbacks.get(s);
+                    Gson gson = new Gson();
+
+                    if (s.contains("/events/")) {
+                        Event event = gson.fromJson(new String(mqttMessage.getPayload()), Event.class);
+                        ((WiaEventSubscribeCallback)callback).received(event);
+                    } else if (s.contains("/logs/")) {
+                        Log log = gson.fromJson(new String(mqttMessage.getPayload()), Log.class);
+                        ((WiaLogSubscribeCallback)callback).received(log);
+                    }
                 }
 
                 // Check for wildcard topic
@@ -80,7 +97,9 @@ public class WiaStreamClient {
     }
 
     public void disconnect() throws MqttException {
-        mqttClient.disconnect();
+        if (mqttClient.isConnected()) {
+            mqttClient.disconnect();
+        }
     }
 
     public boolean isConnected() {
@@ -100,6 +119,7 @@ public class WiaStreamClient {
     public void subscribe(String topic, WiaSubscribeCallback callback) {
         if (mqttClient.isConnected()) {
             logger.debug("Is connected. Subscribing to topic: " + topic);
+            logger.debug(callback);
             try {
                 mqttClient.subscribe(topic, 0);
                 subscribeCallbacks.put(topic, callback);
@@ -113,10 +133,25 @@ public class WiaStreamClient {
 
     public void unsubscribe(String topic) {
         try {
-            mqttClient.unsubscribe(topic);
+            if (mqttClient.isConnected())
+                mqttClient.unsubscribe(topic);
             subscribeCallbacks.remove(topic);
         } catch (MqttException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void unsubscribeFromAll() {
+        if (subscribeCallbacks != null) {
+            for (String key : subscribeCallbacks.keySet()) {
+                try {
+                    if (mqttClient.isConnected())
+                        mqttClient.unsubscribe(key);
+                    subscribeCallbacks.remove(key);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

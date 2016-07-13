@@ -1,11 +1,14 @@
 package io.wia.model;
 
+import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
 import io.wia.exception.InvalidRequestException;
 import io.wia.net.APIResource;
 import io.wia.net.RequestOptions;
+import io.wia.net.WiaEventSubscribeCallback;
+import io.wia.net.WiaLogSubscribeCallback;
 
 import java.util.Map;
 
@@ -89,5 +92,21 @@ public class Log extends APIResource implements HasId {
                                         RequestOptions options) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return requestCollection(classURL(Log.class), params, LogCollection.class, options);
+    }
+
+    public static void subscribe(String device, WiaLogSubscribeCallback callback) {
+        subscribe(device, "+", callback);
+    }
+
+    public static void subscribe(String device, String logLevel, WiaLogSubscribeCallback callback) {
+        WiaStreamClient.getInstance().subscribe("devices/" + device + "/logs/" + logLevel, callback);
+    }
+
+    public static void unsubscribe(String device) {
+        unsubscribe(device, "+");
+    }
+
+    public static void unsubscribe(String device, String logLevel) {
+        WiaStreamClient.getInstance().unsubscribe("devices/" + device + "/logs/" + logLevel);
     }
 }
