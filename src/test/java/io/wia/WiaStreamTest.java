@@ -131,4 +131,51 @@ public class WiaStreamTest {
         Log.unsubscribe(deviceId, logLevel);
         Thread.sleep(750);
     }
+
+    @Test
+    public void testUserSubscribeToLocations() throws WiaException, InterruptedException, MqttException {
+        Wia.secretKey = getSecretKey();
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+
+        final String deviceId = "dev_w9axizeLis3H69oK";
+
+        Location.subscribe(deviceId, new WiaLocationSubscribeCallback() {
+            @Override
+            public void received(Location location) {
+                logger.debug("Got location. Timestamp: " + location.getTimestamp() + " Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude());
+                assertNotNull(location.getTimestamp());
+                assertNotNull(location.getLatitude());
+                assertNotNull(location.getLongitude());
+            }
+        });
+        Thread.sleep(5000);
+        Location.unsubscribe(deviceId);
+        Thread.sleep(750);
+    }
+
+    @Test
+    public void testUserSubscribeToSensors() throws WiaException, InterruptedException, MqttException {
+        Wia.secretKey = getSecretKey();
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+
+        final String deviceId = "dev_w9axizeLis3H69oK";
+
+        Sensor.subscribe(deviceId, new WiaSensorSubscribeCallback() {
+            @Override
+            public void received(Sensor sensor) {
+                logger.debug("Got sensor. Timestamp: " + sensor.getTimestamp());
+                assertNotNull(sensor.getTimestamp());
+                assertNotNull(sensor.getName());
+            }
+        });
+        Thread.sleep(5000);
+        Sensor.unsubscribe(deviceId);
+        Thread.sleep(750);
+    }
 }

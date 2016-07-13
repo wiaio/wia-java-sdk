@@ -110,5 +110,4 @@ public class Event extends APIResource implements HasId {
     public static void unsubscribe(String device, String eventName) {
         WiaStreamClient.getInstance().unsubscribe("devices/" + device + "/events/" + eventName);
     }
-
 }

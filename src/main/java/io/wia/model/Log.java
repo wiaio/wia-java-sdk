@@ -68,7 +68,6 @@ public class Log extends APIResource implements HasId {
         this.receivedTimestamp = receivedTimestamp;
     }
 
-
     public static Log publish(Map<String, Object> params)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {

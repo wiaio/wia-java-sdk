@@ -1,11 +1,14 @@
 package io.wia.model;
 
+import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
 import io.wia.exception.InvalidRequestException;
 import io.wia.net.APIResource;
 import io.wia.net.RequestOptions;
+import io.wia.net.WiaLocationSubscribeCallback;
+import io.wia.net.WiaLogSubscribeCallback;
 
 import java.util.Map;
 
@@ -49,6 +52,22 @@ public class Location extends APIResource implements HasId {
         this.altitude = altitude;
     }
 
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Long getReceivedTimestamp() {
+        return receivedTimestamp;
+    }
+
+    public void setReceivedTimestamp(Long receivedTimestamp) {
+        this.receivedTimestamp = receivedTimestamp;
+    }
+
     public static Location publish(Map<String, Object> params)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
@@ -72,5 +91,13 @@ public class Location extends APIResource implements HasId {
                                         RequestOptions options) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return requestCollection(classURL(Location.class), params, LocationCollection.class, options);
+    }
+
+    public static void subscribe(String device, WiaLocationSubscribeCallback callback) {
+        WiaStreamClient.getInstance().subscribe("devices/" + device + "/locations", callback);
+    }
+
+    public static void unsubscribe(String device) {
+        WiaStreamClient.getInstance().unsubscribe("devices/" + device + "/locations");
     }
 }

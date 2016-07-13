@@ -2,10 +2,10 @@ package io.wia;
 
 import com.google.gson.Gson;
 import io.wia.model.Event;
+import io.wia.model.Location;
 import io.wia.model.Log;
-import io.wia.net.WiaEventSubscribeCallback;
-import io.wia.net.WiaLogSubscribeCallback;
-import io.wia.net.WiaSubscribeCallback;
+import io.wia.model.Sensor;
+import io.wia.net.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.*;
@@ -74,6 +74,12 @@ public class WiaStreamClient {
                     } else if (s.contains("/logs/")) {
                         Log log = gson.fromJson(new String(mqttMessage.getPayload()), Log.class);
                         ((WiaLogSubscribeCallback)callback).received(log);
+                    } else if (s.contains("/sensors/")) {
+                        Sensor sensor = gson.fromJson(new String(mqttMessage.getPayload()), Sensor.class);
+                        ((WiaSensorSubscribeCallback)callback).received(sensor);
+                    } else if (s.contains("/locations")) {
+                        Location location = gson.fromJson(new String(mqttMessage.getPayload()), Location.class);
+                        ((WiaLocationSubscribeCallback)callback).received(location);
                     }
                 }
 

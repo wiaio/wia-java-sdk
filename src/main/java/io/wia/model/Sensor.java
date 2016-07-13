@@ -1,11 +1,14 @@
 package io.wia.model;
 
+import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
 import io.wia.exception.InvalidRequestException;
 import io.wia.net.APIResource;
 import io.wia.net.RequestOptions;
+import io.wia.net.WiaEventSubscribeCallback;
+import io.wia.net.WiaSensorSubscribeCallback;
 
 import java.util.Map;
 
@@ -79,5 +82,21 @@ public class Sensor extends APIResource implements HasId {
                                         RequestOptions options) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return requestCollection(classURL(Sensor.class), params, SensorCollection.class, options);
+    }
+
+    public static void subscribe(String device, WiaSensorSubscribeCallback callback) {
+        subscribe(device, "+", callback);
+    }
+
+    public static void subscribe(String device, String sensorName, WiaSensorSubscribeCallback callback) {
+        WiaStreamClient.getInstance().subscribe("devices/" + device + "/sensors/" + sensorName, callback);
+    }
+
+    public static void unsubscribe(String device) {
+        unsubscribe(device, "+");
+    }
+
+    public static void unsubscribe(String device, String sensorName) {
+        WiaStreamClient.getInstance().unsubscribe("devices/" + device + "/sensors/" + sensorName);
     }
 }
