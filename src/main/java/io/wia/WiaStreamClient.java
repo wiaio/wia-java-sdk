@@ -32,7 +32,7 @@ public class WiaStreamClient {
     protected WiaStreamClient() {
         persistence = new MemoryPersistence();
         try {
-            mqttClient = new MqttClient("tcp://api.wia.io:1883", MqttClient.generateClientId(), persistence);
+            mqttClient = new MqttClient(Wia.getStreamApiEndpoint(), MqttClient.generateClientId(), persistence);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -50,7 +50,6 @@ public class WiaStreamClient {
         connOpts.setCleanSession(true);
         connOpts.setUserName(Wia.secretKey);
         connOpts.setPassword(" ".toCharArray());
-        logger.debug("Using username: " + Wia.secretKey);
 
         mqttClient.setCallback(new MqttCallback() {
             @Override
