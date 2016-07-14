@@ -4,8 +4,6 @@ import io.wia.model.*;
 import io.wia.net.*;
 import io.wia.exception.*;
 
-import junit.framework.Assert;
-
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.junit.After;
@@ -13,6 +11,9 @@ import org.junit.Test;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -50,7 +51,7 @@ public class WiaStreamTest {
 
     @Test
     public void testUserConnectToStream() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -59,7 +60,7 @@ public class WiaStreamTest {
 
     @Test
     public void testUserIsConnectedToStream() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -68,16 +69,16 @@ public class WiaStreamTest {
 
     @Test
     public void testDeviceConnectToStream() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Wia.connectToStream();
         logger.info("Connected to stream!");
-        Thread.sleep(1500);
+        Thread.sleep(750);
     }
 
     @Test
     public void testDeviceIsConnectedToStream() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -86,7 +87,7 @@ public class WiaStreamTest {
 
     @Test
     public void testUserSubscribeToEvents() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -103,14 +104,14 @@ public class WiaStreamTest {
                 assertNotNull(event.getTimestamp());
             }
         });
-        Thread.sleep(5000);
+        Thread.sleep(2500);
         Event.unsubscribe(deviceId, eventName);
-        Thread.sleep(750);
+        Thread.sleep(250);
     }
 
     @Test
     public void testUserSubscribeToLogs() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -127,14 +128,14 @@ public class WiaStreamTest {
                 assertNotNull(log.getTimestamp());
             }
         });
-        Thread.sleep(5000);
+        Thread.sleep(2500);
         Log.unsubscribe(deviceId, logLevel);
-        Thread.sleep(750);
+        Thread.sleep(250);
     }
 
     @Test
     public void testUserSubscribeToLocations() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -145,20 +146,20 @@ public class WiaStreamTest {
         Location.subscribe(deviceId, new WiaLocationSubscribeCallback() {
             @Override
             public void received(Location location) {
-                logger.debug("Got location. Timestamp: " + location.getTimestamp() + " Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude());
-                assertNotNull(location.getTimestamp());
-                assertNotNull(location.getLatitude());
-                assertNotNull(location.getLongitude());
+            logger.debug("Got location. Timestamp: " + location.getTimestamp() + " Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude());
+            assertNotNull(location.getTimestamp());
+            assertNotNull(location.getLatitude());
+            assertNotNull(location.getLongitude());
             }
         });
-        Thread.sleep(5000);
+        Thread.sleep(2500);
         Location.unsubscribe(deviceId);
-        Thread.sleep(750);
+        Thread.sleep(250);
     }
 
     @Test
     public void testUserSubscribeToSensors() throws WiaException, InterruptedException, MqttException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Wia.connectToStream();
         Thread.sleep(250);
@@ -174,8 +175,84 @@ public class WiaStreamTest {
                 assertNotNull(sensor.getName());
             }
         });
-        Thread.sleep(5000);
+        Thread.sleep(2500);
         Sensor.unsubscribe(deviceId);
-        Thread.sleep(750);
+        Thread.sleep(250);
+    }
+
+    @Test
+    public void testDevicePublishEvents() throws WiaException, InterruptedException, MqttException {
+        Wia.setSecretKey(getDeviceSecretKey());
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+
+        Map<String, Object> eventParams = new HashMap<String, Object>();
+        eventParams.put("name", "testEvent");
+        eventParams.put("data", "data goes here");
+
+        int max = 20;
+        for (int i=0;i<max;i++) {
+            Event.publish(eventParams);
+            Thread.sleep(100);
+        }
+    }
+
+    @Test
+    public void testDevicePublishSensors() throws WiaException, InterruptedException, MqttException {
+        Wia.setSecretKey(getDeviceSecretKey());
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+
+        Map<String, Object> sensorParams = new HashMap<String, Object>();
+        sensorParams.put("name", "temperature");
+        sensorParams.put("data", 21.5);
+
+        int max = 20;
+        for (int i=0;i<max;i++) {
+            Sensor.publish(sensorParams);
+            Thread.sleep(100);
+        }
+    }
+
+    @Test
+    public void testDevicePublishLogs() throws WiaException, InterruptedException, MqttException {
+        Wia.setSecretKey(getDeviceSecretKey());
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+
+        Map<String, Object> logParams = new HashMap<String, Object>();
+        logParams.put("level", "info");
+        logParams.put("message", "this is a log message");
+
+        int max = 20;
+        for (int i=0;i<max;i++) {
+            Log.publish(logParams);
+            Thread.sleep(100);
+        }
+    }
+
+    @Test
+    public void testDevicePublishLocations() throws WiaException, InterruptedException, MqttException {
+        Wia.setSecretKey(getDeviceSecretKey());
+
+        Wia.connectToStream();
+        Thread.sleep(250);
+        assertTrue(Wia.isConnectedToStream());
+
+        Map<String, Object> locationParams = new HashMap<String, Object>();
+        locationParams.put("latitude", 40.7144);
+        locationParams.put("longitude", -74.006);
+
+        int max = 20;
+        for (int i=0;i<max;i++) {
+            Location.publish(locationParams);
+            Thread.sleep(100);
+        }
     }
 }

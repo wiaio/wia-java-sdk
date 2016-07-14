@@ -1,5 +1,7 @@
 package io.wia.model;
 
+import com.google.gson.Gson;
+import io.wia.Wia;
 import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
@@ -68,8 +70,15 @@ public class Sensor extends APIResource implements HasId {
     public static Sensor publish(Map<String, Object> params, RequestOptions options)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
-        // TODO: Check is stream is connect, if yes, send via stream instead
-        return request(RequestMethod.POST, classURL(Sensor.class), params, Sensor.class, options);
+        if (WiaStreamClient.getInstance().isConnected()) {
+            Gson gson = new Gson();
+            String payload = gson.toJson(params);
+            String topic = "devices/" + Wia.getClientInfo().getDevice().getId() + "/sensors/" + params.get("name");
+            WiaStreamClient.getInstance().publish(topic, payload);
+            return new Sensor();
+        } else {
+            return request(APIResource.RequestMethod.POST, classURL(Sensor.class), params, Sensor.class, options);
+        }
     }
 
     public static SensorCollection list(Map<String, Object> params)

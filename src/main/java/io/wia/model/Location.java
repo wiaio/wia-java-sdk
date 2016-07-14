@@ -1,5 +1,7 @@
 package io.wia.model;
 
+import com.google.gson.Gson;
+import io.wia.Wia;
 import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
@@ -77,8 +79,15 @@ public class Location extends APIResource implements HasId {
     public static Location publish(Map<String, Object> params, RequestOptions options)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
-        // TODO: Check is stream is connect, if yes, send via stream instead
-        return request(RequestMethod.POST, classURL(Location.class), params, Location.class, options);
+        if (WiaStreamClient.getInstance().isConnected()) {
+            Gson gson = new Gson();
+            String payload = gson.toJson(params);
+            String topic = "devices/" + Wia.getClientInfo().getDevice().getId() + "/locations";
+            WiaStreamClient.getInstance().publish(topic, payload);
+            return new Location();
+        } else {
+            return request(APIResource.RequestMethod.POST, classURL(Location.class), params, Location.class, options);
+        }
     }
 
     public static LocationCollection list(Map<String, Object> params)

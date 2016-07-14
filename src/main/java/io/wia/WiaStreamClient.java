@@ -48,7 +48,7 @@ public class WiaStreamClient {
     public void connect() throws MqttException {
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
-        connOpts.setUserName(Wia.secretKey);
+        connOpts.setUserName(Wia.getSecretKey());
         connOpts.setPassword(" ".toCharArray());
 
         mqttClient.setCallback(new MqttCallback() {
@@ -94,7 +94,7 @@ public class WiaStreamClient {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-                logger.debug("deliveryComplete");
+                logger.debug("deliveryComplete to topic: " + iMqttDeliveryToken.getTopics()[0]);
             }
         });
 
@@ -126,7 +126,7 @@ public class WiaStreamClient {
             logger.debug("Is connected. Subscribing to topic: " + topic);
             logger.debug(callback);
             try {
-                mqttClient.subscribe(topic, 0);
+                mqttClient.subscribe(topic, MQTT_QOS);
                 subscribeCallbacks.put(topic, callback);
             } catch (MqttException e) {
                 e.printStackTrace();

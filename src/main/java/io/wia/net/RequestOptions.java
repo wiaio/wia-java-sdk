@@ -4,7 +4,7 @@ import io.wia.Wia;
 
 public class RequestOptions {
     public static RequestOptions getDefault() {
-        return new RequestOptions(Wia.secretKey, Wia.apiVersion);
+        return new RequestOptions(Wia.getSecretKey(), Wia.apiVersion);
     }
 
     private final String secretKey;
@@ -61,7 +61,7 @@ public class RequestOptions {
         private String wiaVersion;
 
         public RequestOptionsBuilder() {
-            this.secretKey = Wia.secretKey;
+            this.secretKey = Wia.getSecretKey();
             this.wiaVersion = Wia.apiVersion;
         }
 

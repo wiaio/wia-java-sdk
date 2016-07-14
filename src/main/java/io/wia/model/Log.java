@@ -1,5 +1,8 @@
 package io.wia.model;
 
+import com.google.gson.Gson;
+import io.wia.Wia;
+import io.wia.WiaClient;
 import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
@@ -77,8 +80,15 @@ public class Log extends APIResource implements HasId {
     public static Log publish(Map<String, Object> params, RequestOptions options)
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
-        // TODO: Check is stream is connect, if yes, send via stream instead
-        return request(RequestMethod.POST, classURL(Log.class), params, Log.class, options);
+        if (WiaStreamClient.getInstance().isConnected()) {
+            Gson gson = new Gson();
+            String payload = gson.toJson(params);
+            String topic = "devices/" + Wia.getClientInfo().getDevice().getId() + "/logs/" + params.get("level");
+            WiaStreamClient.getInstance().publish(topic, payload);
+            return new Log();
+        } else {
+            return request(APIResource.RequestMethod.POST, classURL(Log.class), params, Log.class, options);
+        }
     }
 
     public static LogCollection list(Map<String, Object> params)

@@ -1,6 +1,7 @@
 package io.wia.model;
 
 import com.google.gson.Gson;
+import io.wia.Wia;
 import io.wia.WiaStreamClient;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
@@ -75,7 +76,8 @@ public class Event extends APIResource implements HasId {
         if (WiaStreamClient.getInstance().isConnected()) {
             Gson gson = new Gson();
             String payload = gson.toJson(params);
-            WiaStreamClient.getInstance().publish("devices/---/events/" + params.get("name"), payload);
+            String topic = "devices/" + Wia.getClientInfo().getDevice().getId() + "/events/" + params.get("name");
+            WiaStreamClient.getInstance().publish(topic, payload);
             return new Event();
         } else {
             return request(APIResource.RequestMethod.POST, classURL(Event.class), params, Event.class, options);

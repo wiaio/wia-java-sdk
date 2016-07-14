@@ -1,15 +1,9 @@
 package io.wia;
 
 import io.wia.model.*;
-import io.wia.net.*;
 import io.wia.exception.*;
 
-import junit.framework.Assert;
-
 import org.apache.log4j.BasicConfigurator;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -19,12 +13,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class WiaTest {
     private static Logger logger = LogManager.getLogger(WiaTest.class);
@@ -56,14 +45,16 @@ public class WiaTest {
 
     @Test
     public void testCreateDevice() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
+
         Device device = Device.create(getCreateDeviceParams());
         assertNotNull(device);
     }
 
     @Test
     public void testRetrieveDevice() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
+
         Device createdDevice = Device.create(getCreateDeviceParams());
         assertNotNull(createdDevice);
         Device retrievedDevice = Device.retrieve(createdDevice.getId());
@@ -72,7 +63,7 @@ public class WiaTest {
 
     @Test
     public void testUpdateDevice() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "Old device name");
@@ -91,7 +82,7 @@ public class WiaTest {
 
     @Test
     public void testDeleteDevice() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "Device name");
@@ -105,7 +96,7 @@ public class WiaTest {
 
     @Test
     public void testListDevices() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         DeviceCollection devicesCollection = Device.list(null);
         System.out.println("Device count: " + devicesCollection.getCount());
@@ -114,7 +105,7 @@ public class WiaTest {
 
     @Test
     public void testListDevicesWithParams() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("limit", 10);
@@ -126,7 +117,7 @@ public class WiaTest {
 
     @Test
     public void testPublishEvent() throws WiaException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", "testEvent");
@@ -137,7 +128,7 @@ public class WiaTest {
 
     @Test
     public void testPublishEventWithData() throws WiaException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", "testEventNumber");
@@ -149,7 +140,7 @@ public class WiaTest {
 
     @Test
     public void testPublishEventWithDataObject() throws WiaException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> dataObj = new HashMap<String, Object>();
         dataObj.put("x", 12.45);
@@ -166,7 +157,7 @@ public class WiaTest {
 
     @Test
     public void testListEvents() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "Device name");
@@ -187,7 +178,7 @@ public class WiaTest {
 
     @Test
     public void testPublishLocation() throws WiaException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("latitude", 40.7144);
@@ -199,7 +190,7 @@ public class WiaTest {
 
     @Test
     public void testListLocations() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "testListLocations");
@@ -218,7 +209,7 @@ public class WiaTest {
 
     @Test
     public void testPublishLog() throws WiaException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("level", "info");
@@ -230,7 +221,7 @@ public class WiaTest {
 
     @Test
     public void testListLogs() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "testListLogs");
@@ -250,7 +241,7 @@ public class WiaTest {
 
     @Test
     public void testPublishSensor() throws WiaException {
-        Wia.secretKey = getDeviceSecretKey();
+        Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", "temperature");
@@ -262,7 +253,7 @@ public class WiaTest {
 
     @Test
     public void testListSensors() throws WiaException {
-        Wia.secretKey = getSecretKey();
+        Wia.setSecretKey(getSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "testListSensors");

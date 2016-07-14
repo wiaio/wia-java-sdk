@@ -17,4 +17,8 @@ public class WiaClient {
     public void overrideRestApiBase(final String overriddenRestApiBase) {
         Wia.overrideRestApiBase(overriddenRestApiBase);
     }
+
+    public void overrideStreamApiEndpoint(final String overriddenStreamApiEndpoint) {
+        Wia.overrideStreamApiEndpoint(overriddenStreamApiEndpoint);
+    }
 }

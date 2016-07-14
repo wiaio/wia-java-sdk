@@ -132,17 +132,17 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             wiaURL = new URL(url);
         }
         HttpURLConnection conn;
-        if (Wia.getConnectionProxy() != null) {
-            conn = (HttpURLConnection) wiaURL.openConnection(Wia.getConnectionProxy());
-            Authenticator.setDefault(new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return Wia.getProxyCredential();
-                }
-            });
-        } else {
+//        if (Wia.getConnectionProxy() != null) {
+//            conn = (HttpURLConnection) wiaURL.openConnection(Wia.getConnectionProxy());
+//            Authenticator.setDefault(new Authenticator() {
+//                @Override
+//                protected PasswordAuthentication getPasswordAuthentication() {
+//                    return Wia.getProxyCredential();
+//                }
+//            });
+//        } else {
             conn = (HttpURLConnection) wiaURL.openConnection();
-        }
+//        }
         conn.setConnectTimeout(30 * 1000);
         conn.setReadTimeout(80 * 1000);
         conn.setUseCaches(false);
