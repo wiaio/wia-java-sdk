@@ -30,6 +30,10 @@ public class WiaStreamTest {
         return System.getProperty("testdevicesecretkey") != null ? System.getProperty("testdevicesecretkey") : System.getenv("WIA_TEST_DEVICE_SECRET_KEY");
     }
 
+    static String getDeviceId() {
+        return System.getProperty("testdeviceid") != null ? System.getProperty("testdeviceid") : System.getenv("WIA_TEST_DEVICE_ID");
+    }
+
     static String getRestApiBase() {
         return System.getenv("WIA_TEST_REST_API") != null ? System.getenv("WIA_TEST_REST_API") : "https://api.wia.io";
     }
@@ -93,10 +97,9 @@ public class WiaStreamTest {
         Thread.sleep(250);
         assertTrue(Wia.isConnectedToStream());
 
-        final String deviceId = "dev_w9axizeLis3H69oK";
         final String eventName = "myFirstEvent";
 
-        Event.subscribe(deviceId, eventName, new WiaEventSubscribeCallback() {
+        Event.subscribe(getDeviceId(), eventName, new WiaEventSubscribeCallback() {
             @Override
             public void received(Event event) {
                 logger.debug("Got event. Timestamp: " + event.getTimestamp());
@@ -105,7 +108,7 @@ public class WiaStreamTest {
             }
         });
         Thread.sleep(2500);
-        Event.unsubscribe(deviceId, eventName);
+        Event.unsubscribe(getDeviceId(), eventName);
         Thread.sleep(250);
     }
 
@@ -117,10 +120,9 @@ public class WiaStreamTest {
         Thread.sleep(250);
         assertTrue(Wia.isConnectedToStream());
 
-        final String deviceId = "dev_w9axizeLis3H69oK";
         final String logLevel = "info";
 
-        Log.subscribe(deviceId, logLevel, new WiaLogSubscribeCallback() {
+        Log.subscribe(getDeviceId(), logLevel, new WiaLogSubscribeCallback() {
             @Override
             public void received(Log log) {
                 logger.debug("Got log. Timestamp: " + log.getTimestamp());
@@ -129,7 +131,7 @@ public class WiaStreamTest {
             }
         });
         Thread.sleep(2500);
-        Log.unsubscribe(deviceId, logLevel);
+        Log.unsubscribe(getDeviceId(), logLevel);
         Thread.sleep(250);
     }
 
@@ -141,9 +143,7 @@ public class WiaStreamTest {
         Thread.sleep(250);
         assertTrue(Wia.isConnectedToStream());
 
-        final String deviceId = "dev_w9axizeLis3H69oK";
-
-        Location.subscribe(deviceId, new WiaLocationSubscribeCallback() {
+        Location.subscribe(getDeviceId(), new WiaLocationSubscribeCallback() {
             @Override
             public void received(Location location) {
             logger.debug("Got location. Timestamp: " + location.getTimestamp() + " Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude());
@@ -153,7 +153,7 @@ public class WiaStreamTest {
             }
         });
         Thread.sleep(2500);
-        Location.unsubscribe(deviceId);
+        Location.unsubscribe(getDeviceId());
         Thread.sleep(250);
     }
 
@@ -165,9 +165,7 @@ public class WiaStreamTest {
         Thread.sleep(250);
         assertTrue(Wia.isConnectedToStream());
 
-        final String deviceId = "dev_w9axizeLis3H69oK";
-
-        Sensor.subscribe(deviceId, new WiaSensorSubscribeCallback() {
+        Sensor.subscribe(getDeviceId(), new WiaSensorSubscribeCallback() {
             @Override
             public void received(Sensor sensor) {
                 logger.debug("Got sensor. Timestamp: " + sensor.getTimestamp());
@@ -176,7 +174,7 @@ public class WiaStreamTest {
             }
         });
         Thread.sleep(2500);
-        Sensor.unsubscribe(deviceId);
+        Sensor.unsubscribe(getDeviceId());
         Thread.sleep(250);
     }
 
