@@ -5,13 +5,9 @@ import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
 import io.wia.exception.InvalidRequestException;
 import io.wia.model.Whoami;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public abstract class Wia {
-    private static Logger logger = LogManager.getLogger(Wia.class);
-
     public static final String LIVE_REST_API_BASE = "https://api.wia.io";
     public static final String LIVE_STREAM_API_ENDPOINT = "tcp://api.wia.io:1883";
 
