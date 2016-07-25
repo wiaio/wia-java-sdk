@@ -27,5 +27,5 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "com.wia:wia-java:0.1.0"
+compile "io.wia:wia-java:0.1.0"
 ```
