@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class WiaTest {
     private static Logger logger = LogManager.getLogger(WiaTest.class);
 
-    static String getSecretKey() {
+    static String getUserSecretKey() {
         return System.getProperty("testusersecretkey") != null ? System.getProperty("testusersecretkey") : System.getenv("WIA_TEST_USER_SECRET_KEY");
     }
 
@@ -48,7 +48,7 @@ public class WiaTest {
 
     @Test
     public void testCreateDevice() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Device device = Device.create(getCreateDeviceParams());
         assertNotNull(device);
@@ -56,17 +56,21 @@ public class WiaTest {
 
     @Test
     public void testRetrieveDevice() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Device createdDevice = Device.create(getCreateDeviceParams());
         assertNotNull(createdDevice);
+
+        logger.info("Created device with ID: " + createdDevice.getId());
+
         Device retrievedDevice = Device.retrieve(createdDevice.getId());
         assertNotNull(retrievedDevice);
+        assertTrue(createdDevice.getId().equals(retrievedDevice.getId()));
     }
 
     @Test
     public void testUpdateDevice() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "Old device name");
@@ -74,8 +78,11 @@ public class WiaTest {
         Device createdDevice = Device.create(createParams);
         assertNotNull(createdDevice);
 
+        logger.info("Created device with ID: " + createdDevice.getId());
+
         Device retrievedDevice = Device.retrieve(createdDevice.getId());
         assertNotNull(retrievedDevice);
+        assertTrue(createdDevice.getId().equals(retrievedDevice.getId()));
 
         Map<String, Object> updateParams = new HashMap<String, Object>();
         updateParams.put("name", "New device name");
@@ -85,7 +92,7 @@ public class WiaTest {
 
     @Test
     public void testDeleteDevice() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "Device name");
@@ -99,22 +106,22 @@ public class WiaTest {
 
     @Test
     public void testListDevices() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         DeviceCollection devicesCollection = Device.list(null);
-        System.out.println("Device count: " + devicesCollection.getCount());
+        logger.info("Device count: " + devicesCollection.getCount());
         assertNotNull(devicesCollection);
     }
 
     @Test
     public void testListDevicesWithParams() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("limit", 10);
 
         DeviceCollection devicesCollection = Device.list(params);
-        System.out.println("Device count: " + devicesCollection.getCount());
+        logger.info("Device count: " + devicesCollection.getCount());
         assertNotNull(devicesCollection);
     }
 
@@ -160,15 +167,13 @@ public class WiaTest {
 
     @Test
     public void testListEvents() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "Device name");
 
         Device createdDevice = Device.create(createParams);
         assertNotNull(createdDevice);
-
-        logger.debug("Getting events for device: " + createdDevice.getId());
 
         Map<String, Object> listParams = new HashMap<String, Object>();
         listParams.put("device", createdDevice.getId());
@@ -181,7 +186,6 @@ public class WiaTest {
 
     @Test
     public void testPublishLocation() throws WiaException {
-        logger.info("DEVICE KEY: " + getDeviceSecretKey());
         Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -194,7 +198,7 @@ public class WiaTest {
 
     @Test
     public void testListLocations() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "testListLocations");
@@ -225,7 +229,7 @@ public class WiaTest {
 
     @Test
     public void testListLogs() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "testListLogs");
@@ -257,7 +261,7 @@ public class WiaTest {
 
     @Test
     public void testListSensors() throws WiaException {
-        Wia.setSecretKey(getSecretKey());
+        Wia.setSecretKey(getUserSecretKey());
 
         Map<String, Object> createParams = new HashMap<String, Object>();
         createParams.put("name", "testListSensors");
@@ -280,7 +284,7 @@ public class WiaTest {
         Wia.setAppKey(getAppKey());
 
         DeviceCollection devicesCollection = Device.list(null);
-        System.out.println("Device count: " + devicesCollection.getCount());
+        logger.info("Device count: " + devicesCollection.getCount());
         assertNotNull(devicesCollection);
     }
 
@@ -290,7 +294,7 @@ public class WiaTest {
         Wia.setAppKey(getAppKey());
 
         DeviceCollection devicesCollection = Device.list(null);
-        System.out.println("Device count: " + devicesCollection.getCount());
+        logger.info("Device count: " + devicesCollection.getCount());
         assertNotNull(devicesCollection);
         assertNotNull(devicesCollection.getDevices());
         assertTrue(devicesCollection.getDevices().size() > 0);
