@@ -4,20 +4,26 @@ import io.wia.Wia;
 
 public class RequestOptions {
     public static RequestOptions getDefault() {
-        return new RequestOptions(Wia.getSecretKey(), Wia.apiVersion);
+        return new RequestOptions(Wia.getSecretKey(), Wia.getAppKey(), Wia.apiVersion);
     }
 
     private final String secretKey;
+    private final String appKey;
     private final String wiaVersion;
 
 
-    private RequestOptions(String secretKey, String wiaVersion) {
+    private RequestOptions(String secretKey, String appKey, String wiaVersion) {
         this.secretKey = secretKey;
+        this.appKey = appKey;
         this.wiaVersion = wiaVersion;
     }
 
     public String getSecretKey() {
         return secretKey;
+    }
+
+    public String getAppKey() {
+        return appKey;
     }
 
     public String getWiaVersion() {
@@ -32,6 +38,9 @@ public class RequestOptions {
         RequestOptions that = (RequestOptions) o;
 
         if (secretKey != null ? !secretKey.equals(that.secretKey) : that.secretKey != null) {
+            return false;
+        }
+        if (appKey != null ? !appKey.equals(that.appKey) : that.appKey != null) {
             return false;
         }
         if (wiaVersion != null ? !wiaVersion.equals(that.wiaVersion) : that.wiaVersion != null) {
@@ -58,15 +67,21 @@ public class RequestOptions {
 
     public static final class RequestOptionsBuilder {
         private String secretKey;
+        private String appKey;
         private String wiaVersion;
 
         public RequestOptionsBuilder() {
             this.secretKey = Wia.getSecretKey();
+            this.appKey = Wia.getAppKey();
             this.wiaVersion = Wia.apiVersion;
         }
 
         public String getSecretKey() {
             return secretKey;
+        }
+
+        public String getAppKey() {
+            return appKey;
         }
 
         public RequestOptionsBuilder setSecretKey(String secretKey) {
@@ -92,6 +107,7 @@ public class RequestOptions {
         public RequestOptions build() {
             return new RequestOptions(
                     normalizeSecretKey(this.secretKey),
+                    normalizeAppKey(this.appKey),
                     normalizeWiaVersion(this.wiaVersion));
         }
     }
@@ -104,6 +120,18 @@ public class RequestOptions {
         String normalized = secretKey.trim();
         if (normalized.isEmpty()) {
             throw new InvalidRequestOptionsException("Empty Secret Key specified!");
+        }
+        return normalized;
+    }
+
+    private static String normalizeAppKey(String appKey) {
+        // null appKeys are considered "valid"
+        if (appKey == null) {
+            return null;
+        }
+        String normalized = appKey.trim();
+        if (normalized.isEmpty()) {
+            throw new InvalidRequestOptionsException("Empty App Key specified!");
         }
         return normalized;
     }

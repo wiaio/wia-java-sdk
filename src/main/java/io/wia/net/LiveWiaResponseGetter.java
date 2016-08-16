@@ -79,7 +79,11 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
         headers.put("User-Agent",
                 String.format("Wia/v1 JavaBindings/%s", Wia.VERSION));
 
-        headers.put("Authorization", String.format("Bearer %s", options.getSecretKey()));
+        if (options.getSecretKey() != null)
+            headers.put("Authorization", String.format("Bearer %s", options.getSecretKey()));
+
+        if (options.getAppKey() != null)
+            headers.put("x-app-key", options.getAppKey());
 
         // debug headers
         String[] propertyNames = { "os.name", "os.version", "os.arch",
@@ -422,14 +426,14 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             allowedToSetTTL = false;
         }
 
-        String apiKey = options.getSecretKey();
-        if ((apiKey == null || apiKey.trim().isEmpty()) && !type.equals(AccessToken.class)) {
-            throw new AuthenticationException(
-                    "No Secret key provided. (HINT: set your Secret key using 'Wia.secretKey = <SECRET-KEY>'. "
-                            + "You can generate API keys from the Wia web interface. "
-                            + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
-                    null, 0);
-        }
+//        String apiKey = options.getSecretKey();
+//        if ((apiKey == null || apiKey.trim().isEmpty()) && !type.equals(AccessToken.class)) {
+//            throw new AuthenticationException(
+//                    "No Secret key provided. (HINT: set your Secret key using 'Wia.secretKey = <SECRET-KEY>'. "
+//                            + "You can generate API keys from the Wia web interface. "
+//                            + "See https://docs.wia.io for details or email support@wia.io if you have questions.",
+//                    null, 0);
+//        }
 
         try {
             WiaResponse response;
@@ -609,7 +613,6 @@ public class LiveWiaResponseGetter implements WiaResponseGetter {
             throws InvalidRequestException, AuthenticationException, APIException {
         LiveWiaResponseGetter.Error error = APIResource.GSON.fromJson(rBody,
                 LiveWiaResponseGetter.ErrorContainer.class).error;
-        System.out.println("---------------rCode " + rCode);
         switch (rCode) {
             case 400:
                 throw new InvalidRequestException(error.message, error.param, requestId, rCode, null);

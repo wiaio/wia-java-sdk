@@ -12,8 +12,7 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class WiaTest {
     private static Logger logger = LogManager.getLogger(WiaTest.class);
@@ -24,6 +23,10 @@ public class WiaTest {
 
     static String getDeviceSecretKey() {
         return System.getProperty("testdevicesecretkey") != null ? System.getProperty("testdevicesecretkey") : System.getenv("WIA_TEST_DEVICE_SECRET_KEY");
+    }
+
+    static String getAppKey() {
+        return System.getProperty("testappkey") != null ? System.getProperty("testappkey") : System.getenv("WIA_TEST_APP_KEY");
     }
 
     static String getRestApiBase() {
@@ -178,6 +181,7 @@ public class WiaTest {
 
     @Test
     public void testPublishLocation() throws WiaException {
+        logger.info("DEVICE KEY: " + getDeviceSecretKey());
         Wia.setSecretKey(getDeviceSecretKey());
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -269,4 +273,33 @@ public class WiaTest {
         assertNotNull(sensorCollection.getSensors());
         assertNotNull(sensorCollection.getCount());
     }
+
+    @Test
+    public void testListPublicDevices() throws WiaException {
+        Wia.setSecretKey(null);
+        Wia.setAppKey(getAppKey());
+
+        DeviceCollection devicesCollection = Device.list(null);
+        System.out.println("Device count: " + devicesCollection.getCount());
+        assertNotNull(devicesCollection);
+    }
+
+    @Test
+    public void testRetrievePublicDevice() throws WiaException {
+        Wia.setSecretKey(null);
+        Wia.setAppKey(getAppKey());
+
+        DeviceCollection devicesCollection = Device.list(null);
+        System.out.println("Device count: " + devicesCollection.getCount());
+        assertNotNull(devicesCollection);
+        assertNotNull(devicesCollection.getDevices());
+        assertTrue(devicesCollection.getDevices().size() > 0);
+
+        Device device = devicesCollection.getDevices().get(0);
+
+        Device retrievedDevice = Device.retrieve(device.getId());
+        assertNotNull(retrievedDevice);
+        assertTrue(device.getId().equals(retrievedDevice.getId()));
+    }
+
 }
