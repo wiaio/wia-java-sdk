@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -308,4 +309,45 @@ public class WiaTest {
         assertTrue(device.getId().equals(retrievedDevice.getId()));
     }
 
+    @Test
+    public void testCustomerSignup() throws WiaException {
+        Wia.setSecretKey(null);
+        Wia.setAppKey(getAppKey());
+
+        String emailAddress = RandomStringGen.generate(10) + "@" + RandomStringGen.generate(10) + ".com";
+
+        Map<String, Object> signupParams = new HashMap<String, Object>();
+        signupParams.put("fullName", "Joe Bloggs");
+        signupParams.put("email", emailAddress);
+        signupParams.put("password", "password");
+
+        Customer customer = Customer.signup(signupParams);
+        assertNotNull(customer);
+        assertNotNull(customer.getId());
+    }
+}
+
+class RandomStringGen {
+    private static final String CHAR_LIST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+    public static String generate(int length){
+        StringBuffer randStr = new StringBuffer();
+        for(int i=0; i<length; i++){
+            int number = getRandomNumber();
+            char ch = CHAR_LIST.charAt(number);
+            randStr.append(ch);
+        }
+        return randStr.toString();
+    }
+
+    private static int getRandomNumber() {
+        int randomInt = 0;
+        Random randomGenerator = new Random();
+        randomInt = randomGenerator.nextInt(CHAR_LIST.length());
+        if (randomInt - 1 == -1) {
+            return randomInt;
+        } else {
+            return randomInt - 1;
+        }
+    }
 }
