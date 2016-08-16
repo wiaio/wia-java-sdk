@@ -5,17 +5,17 @@ import io.wia.net.RequestOptions;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerCollection implements WiaCollectionInterface<Customer> {
-    List<Device> customers;
+public class FunctionCollection implements WiaCollectionInterface<Function> {
+    List<Function> functions;
     Integer count;
     private RequestOptions requestOptions;
     private Map<String, Object> requestParams;
 
-    public List<Device> getCustomers() {
-        return customers;
+    public List<Function> getFunctions() {
+        return functions;
     }
-    public void setCustomers(List<Device> customers) {
-        this.customers = customers;
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
     }
     public Integer getCount() {
         return count;
