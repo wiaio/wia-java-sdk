@@ -1,5 +1,6 @@
 package io.wia.model;
 
+import io.wia.Wia;
 import io.wia.exception.APIConnectionException;
 import io.wia.exception.APIException;
 import io.wia.exception.AuthenticationException;
@@ -135,5 +136,23 @@ public class Customer extends APIResource implements HasId {
             throws AuthenticationException, InvalidRequestException,
             APIConnectionException, APIException {
         return request(RequestMethod.POST, stringURL("customers/signup"), params, Customer.class, options);
+    }
+
+    public static AccessToken login(Map<String, Object> params)
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        return login(params, (RequestOptions) null);
+    }
+
+    public static AccessToken login(Map<String, Object> params, RequestOptions options)
+            throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, APIException {
+        params.put("scope", "customer");
+        params.put("grantType", "password");
+
+        AccessToken accessToken = request(RequestMethod.POST, stringURL("auth/token"), params, AccessToken.class, options);
+        Wia.setSecretKey(accessToken.getAccessToken());
+
+        return accessToken;
     }
 }

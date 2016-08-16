@@ -314,16 +314,47 @@ public class WiaTest {
         Wia.setSecretKey(null);
         Wia.setAppKey(getAppKey());
 
+        String fullName = "Java SDK Test";
         String emailAddress = RandomStringGen.generate(10) + "@" + RandomStringGen.generate(10) + ".com";
+        String password = RandomStringGen.generate(10);
 
         Map<String, Object> signupParams = new HashMap<String, Object>();
-        signupParams.put("fullName", "Joe Bloggs");
+        signupParams.put("fullName", fullName);
         signupParams.put("email", emailAddress);
-        signupParams.put("password", "password");
+        signupParams.put("password", password);
 
         Customer customer = Customer.signup(signupParams);
         assertNotNull(customer);
         assertNotNull(customer.getId());
+    }
+
+    @Test
+    public void testCustomerLogin() throws WiaException {
+        Wia.setSecretKey(null);
+        Wia.setAppKey(getAppKey());
+
+        String fullName = "Java SDK Test";
+        String emailAddress = RandomStringGen.generate(10) + "@" + RandomStringGen.generate(10) + ".com";
+        String password = RandomStringGen.generate(10);
+
+        Map<String, Object> signupParams = new HashMap<String, Object>();
+        signupParams.put("fullName", fullName);
+        signupParams.put("email", emailAddress);
+        signupParams.put("password", password);
+
+        Customer customer = Customer.signup(signupParams);
+        assertNotNull(customer);
+        assertNotNull(customer.getId());
+
+        Map<String, Object> loginParams = new HashMap<String, Object>();
+        loginParams.put("username", emailAddress);
+        loginParams.put("password", password);
+
+        AccessToken accessToken = Customer.login(loginParams);
+        assertNotNull(accessToken);
+        assertNotNull(accessToken.getAccessToken());
+
+        System.out.println("Access token: " + accessToken.getAccessToken());
     }
 }
 
