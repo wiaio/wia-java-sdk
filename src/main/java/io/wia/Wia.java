@@ -11,7 +11,7 @@ public abstract class Wia {
     public static final String LIVE_REST_API_BASE = "https://api.wia.io";
     public static final String LIVE_STREAM_API_ENDPOINT = "tcp://api.wia.io:1883";
 
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.1";
     public static volatile String apiVersion;
 
     private static volatile String secretKey;
