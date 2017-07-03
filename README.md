@@ -18,7 +18,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.wia</groupId>
   <artifactId>wia-java</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
@@ -27,5 +27,5 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.wia:wia-java:0.1.1"
+compile "io.wia:wia-java:0.2.0"
 ```
